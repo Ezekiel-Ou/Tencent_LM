@@ -1,0 +1,19 @@
+[env_conf]
+# Stage 1 — Survival while collecting (revised)
+# 阶段 1 — 边逃边拾：保留宝箱/buff 作为主目标，只降低对抗难度（无怪物 2、无加速）
+# 目标指标：平均宝箱收集 >=1/5，撞墙步=0，存活率 >50%
+# 自动切换到 stage 2 的阈值：episode_cnt >= 8000（每 worker 独立计数）
+
+map = [1, 2, 3]
+map_random = true
+# 保留宝箱作为主目标，从第 1 局起学习"拾取+逃跑"联合策略
+treasure_count = 5
+# 保留 buff，从开始就学会用加速
+buff_count = 2
+buff_cooldown = 200
+talent_cooldown = 100
+# 怪物 2 不出现（1500 > max_step=500）
+monster_interval = 1500
+# 怪物不加速（2000 > max_step=500）
+monster_speedup = 2000
+max_step = 500

@@ -1,0 +1,25 @@
+# macOS
+.DS_Store
+
+# Python caches
+__pycache__/
+*.py[cod]
+.pytest_cache/
+
+# Training outputs and logs
+ckpt/
+*.ckpt
+model.ckpt*
+*.log
+
+# Local backups and platform signatures
+*.bk
+*.bak
+.kaiwu.sign
+
+# Local environments and credentials
+.env
+.env.*
+!.env.example
+.venv/
+venv/

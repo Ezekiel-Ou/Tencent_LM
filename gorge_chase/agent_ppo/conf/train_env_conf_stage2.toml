@@ -1,0 +1,16 @@
+[env_conf]
+# Stage 2 — Introduce the 2nd monster
+# 阶段 2 — 引入怪物 2：仅增加一维对抗难度（怪物 2 会出现）
+# 相对 Stage 1 的唯一变化：monster_interval 从 1500 降到 500，怪物 2 进场
+
+map = [1, 2, 3, 4]
+map_random = true
+treasure_count = 5
+buff_count = 2
+buff_cooldown = 200
+talent_cooldown = 100
+# 怪物 2 在第 500 步左右出现（略晚于 max_step 中点，给适应时间）
+monster_interval = 500
+# 仍不加速
+monster_speedup = 2000
+max_step = 700

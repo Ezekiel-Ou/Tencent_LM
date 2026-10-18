@@ -1,0 +1,14 @@
+[env_conf]
+# Stage 4 — Final challenge (default config)
+# 阶段 4 — 最终挑战：完整配置 + 10 张训练图随机
+# 浪费闪现惩罚满强度（R_FLASH_WASTE_STAGE4）
+
+map = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+map_random = true
+treasure_count = 10
+buff_count = 2
+buff_cooldown = 200
+talent_cooldown = 100
+monster_interval = 300
+monster_speedup = 500
+max_step = 1000

@@ -23,3 +23,6 @@ model.ckpt*
 !.env.example
 .venv/
 venv/
+
+# Local copies of official guides and illustrations
+experiment_guide/

@@ -1,0 +1,71 @@
+{
+  "archive_format": 1,
+  "milestones": [
+    {
+      "game": "honor_of_kings_1v1",
+      "version": "v2.9",
+      "directory": "honor_of_kings_1v1/v2_9",
+      "readme": "honor_of_kings_1v1/v2_9/README.md",
+      "snapshot": "honor_of_kings_1v1/v2_9/snapshot.json",
+      "source_repository": "Ezekiel-Ou/Tencent_LM-hoc",
+      "source_commit": "25f3bec00f0f71181452f5f216bb9c3254fcf92e",
+      "source_author_login": "dccc444",
+      "runtime_files": 47
+    },
+    {
+      "game": "honor_of_kings_1v1",
+      "version": "v3.5",
+      "directory": "honor_of_kings_1v1/v3_5",
+      "readme": "honor_of_kings_1v1/v3_5/README.md",
+      "snapshot": "honor_of_kings_1v1/v3_5/snapshot.json",
+      "source_repository": "Ezekiel-Ou/Tencent_LM-hoc",
+      "source_commit": "4368118a4069944325ad8140f9b98c1083f283df",
+      "source_author_login": "dccc444",
+      "runtime_files": 47
+    },
+    {
+      "game": "honor_of_kings_1v1",
+      "version": "v4.3",
+      "directory": "honor_of_kings_1v1/v4_3",
+      "readme": "honor_of_kings_1v1/v4_3/README.md",
+      "snapshot": "honor_of_kings_1v1/v4_3/snapshot.json",
+      "source_repository": "Ezekiel-Ou/Tencent_LM-hoc",
+      "source_commit": "6f2ad8964c0c4a4f20ed232d3a5da0e98cda665d",
+      "source_author_login": "dccc444",
+      "runtime_files": 48
+    },
+    {
+      "game": "honor_of_kings_3v3",
+      "version": "v1.0",
+      "directory": "honor_of_kings_3v3/v1_0",
+      "readme": "honor_of_kings_3v3/v1_0/README.md",
+      "snapshot": "honor_of_kings_3v3/v1_0/snapshot.json",
+      "source_repository": "dccc444/kaiwu_team",
+      "source_commit": "4344426d2f75064d4fc50aeeccc5b068ee954195",
+      "source_author_login": "dccc444",
+      "runtime_files": 56
+    },
+    {
+      "game": "honor_of_kings_3v3",
+      "version": "v3.5",
+      "directory": "honor_of_kings_3v3/v3_5",
+      "readme": "honor_of_kings_3v3/v3_5/README.md",
+      "snapshot": "honor_of_kings_3v3/v3_5/snapshot.json",
+      "source_repository": "dccc444/kaiwu_team",
+      "source_commit": "c860f3e6ce171518d2591c2aba696b25e3cca887",
+      "source_author_login": "dccc444",
+      "runtime_files": 83
+    },
+    {
+      "game": "honor_of_kings_3v3",
+      "version": "v4.0",
+      "directory": "honor_of_kings_3v3/v4_0",
+      "readme": "honor_of_kings_3v3/v4_0/README.md",
+      "snapshot": "honor_of_kings_3v3/v4_0/snapshot.json",
+      "source_repository": "dccc444/kaiwu_team",
+      "source_commit": "109b91377a18eaa896efb11513cf75793404da32",
+      "source_author_login": "dccc444",
+      "runtime_files": 85
+    }
+  ]
+}

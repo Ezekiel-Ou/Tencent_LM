@@ -1,0 +1,700 @@
+{
+  "archive_format": 1,
+  "game": "honor_of_kings_3v3",
+  "version": "v3.5",
+  "title": "协作任务状态机与奖励迭代",
+  "source": {
+    "repository": "dccc444/kaiwu_team",
+    "commit": "c860f3e6ce171518d2591c2aba696b25e3cca887",
+    "commit_url": "https://github.com/dccc444/kaiwu_team/commit/c860f3e6ce171518d2591c2aba696b25e3cca887",
+    "commit_subject": "PPO 3.5: Full implementation - M01/C01/C02/C03 macro objectives, R01-R05 reward updates, F01 feature semantics, S01 safety boundary, and unified task state machine",
+    "author_login": "dccc444",
+    "author_name": "Dccc4",
+    "author_date": "2026-07-31T15:56:39+08:00"
+  },
+  "runtime": {
+    "algorithm": "ppo",
+    "agent_package": "agent_ppo",
+    "requires_matching_kaiwu_platform": true,
+    "checkpoint_included": false
+  },
+  "scope": {
+    "included": "tracked runtime Python sources and TOML/INI/JSON configuration under agent_diy, agent_ppo, conf, tools, plus tracked root Python launchers when present",
+    "excluded": "upstream Git history, developer instructions, design archives, official guide documents, kaiwu.json, credentials, runtime logs, caches and model weights",
+    "naming": "Outer archive directories use lower_snake_case and vMAJOR_MINOR; runtime package and configuration names retain the source-version contract."
+  },
+  "validation": {
+    "source_bytes": "verified_against_original_git_blobs",
+    "python_syntax": "passed",
+    "toml_syntax": "passed",
+    "json_syntax": "passed",
+    "platform_training": "not_run",
+    "game_evaluation": "not_run"
+  },
+  "files": [
+    {
+      "path": "agent_diy/__init__.py",
+      "source_path": "agent_diy/__init__.py",
+      "source_git_blob": "e69de29bb2d1d6434b8b29ae775ad8c2e48c5391",
+      "git_mode": "100644",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "path": "agent_diy/agent.py",
+      "source_path": "agent_diy/agent.py",
+      "source_git_blob": "6efd8009627a6dea8b464ff698ec661dc7b5e6ba",
+      "git_mode": "100644",
+      "sha256": "19443c2f1518861f9dfba86ce24d2f6875a6a5140782d47bf9d97dd0df19c6f6",
+      "bytes": 186
+    },
+    {
+      "path": "agent_diy/algorithm/__init__.py",
+      "source_path": "agent_diy/algorithm/__init__.py",
+      "source_git_blob": "e69de29bb2d1d6434b8b29ae775ad8c2e48c5391",
+      "git_mode": "100644",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "path": "agent_diy/algorithm/algorithm.py",
+      "source_path": "agent_diy/algorithm/algorithm.py",
+      "source_git_blob": "aca6cd3df0e4c0efc981e75c6109c8581c45e47a",
+      "git_mode": "100644",
+      "sha256": "900c106a2a0654df3b57eb045d590c32076d020b42679ab5b8c816b2da778f15",
+      "bytes": 746
+    },
+    {
+      "path": "agent_diy/conf/__init__.py",
+      "source_path": "agent_diy/conf/__init__.py",
+      "source_git_blob": "e69de29bb2d1d6434b8b29ae775ad8c2e48c5391",
+      "git_mode": "100644",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "path": "agent_diy/conf/conf.py",
+      "source_path": "agent_diy/conf/conf.py",
+      "source_git_blob": "6805cecc9deb63e5d2bda96b52fe152ea4146edd",
+      "git_mode": "100644",
+      "sha256": "0aac87e70cc45826ec97de1e4481d895c1f5c630d40945ac63d89a45d37ae4b2",
+      "bytes": 1741
+    },
+    {
+      "path": "agent_diy/conf/monitor_builder.py",
+      "source_path": "agent_diy/conf/monitor_builder.py",
+      "source_git_blob": "51de5d4d110f96017a1db958eb4297684e0d2a20",
+      "git_mode": "100644",
+      "sha256": "aa619abbce224fb1fc43c9ee1da2fd8fa7411fd9652a7874f3ac950ddd8efe18",
+      "bytes": 1097
+    },
+    {
+      "path": "agent_diy/conf/train_env_conf.toml",
+      "source_path": "agent_diy/conf/train_env_conf.toml",
+      "source_git_blob": "5fe2a6e7b02a20bfe109f9c57b1ef2a84e22b9ed",
+      "git_mode": "100644",
+      "sha256": "20e80d0bd384e14a0c8daaba9c8fe89d072d8b9ac7007fca07a3f807adfd5573",
+      "bytes": 6109
+    },
+    {
+      "path": "agent_diy/debug/__init__.py",
+      "source_path": "agent_diy/debug/__init__.py",
+      "source_git_blob": "e0a0508c2db19dc25f2d45828b9a16356f435099",
+      "git_mode": "100644",
+      "sha256": "b67cbda2fb73c44694f85e4cdfc64ee80bc91552253502c7da0fcaf1c7b35191",
+      "bytes": 48
+    },
+    {
+      "path": "agent_diy/debug/official_jungle_probe.py",
+      "source_path": "agent_diy/debug/official_jungle_probe.py",
+      "source_git_blob": "74f0fddf86bed06820c07ba37d0d5bce624f40f6",
+      "git_mode": "100644",
+      "sha256": "0f466ff6faa5335e498f31bfc1fb46c173bf0c6fab08517d47afcf70a6974352",
+      "bytes": 75931
+    },
+    {
+      "path": "agent_diy/debug/official_jungle_trace.py",
+      "source_path": "agent_diy/debug/official_jungle_trace.py",
+      "source_git_blob": "9540cdcac5b966894786b414f099e2b795bf4d5a",
+      "git_mode": "100644",
+      "sha256": "96bb31d88afb9756257985f4fef54f3110ad3a24564d6b3f4ac1f4f61d1056b5",
+      "bytes": 20510
+    },
+    {
+      "path": "agent_diy/debug/test_official_jungle_probe.py",
+      "source_path": "agent_diy/debug/test_official_jungle_probe.py",
+      "source_git_blob": "da2c392b528f63f4cebcbf6ebd7e780123166d30",
+      "git_mode": "100644",
+      "sha256": "a3b57220ab7590b3a63af579aa6bfafdda43295fcd73929c7fd3e4a635432b70",
+      "bytes": 32494
+    },
+    {
+      "path": "agent_diy/debug/test_official_jungle_trace.py",
+      "source_path": "agent_diy/debug/test_official_jungle_trace.py",
+      "source_git_blob": "6f364de2080210bb176b9a0dc47024b14c1fc125",
+      "git_mode": "100644",
+      "sha256": "6e3e27c35f098b04850d629af4cd1704cdc9f71cb2ad78f33f5c8ad66267c116",
+      "bytes": 3965
+    },
+    {
+      "path": "agent_diy/feature/__init__.py",
+      "source_path": "agent_diy/feature/__init__.py",
+      "source_git_blob": "e69de29bb2d1d6434b8b29ae775ad8c2e48c5391",
+      "git_mode": "100644",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "path": "agent_diy/feature/definition.py",
+      "source_path": "agent_diy/feature/definition.py",
+      "source_git_blob": "ff6a9c27261fbed962e50422d80865d6b0eb50b7",
+      "git_mode": "100644",
+      "sha256": "4c1fba5205078b98ca9f289826cb8d1528cadf90807bc852d7092a7c2dc9e29b",
+      "bytes": 1711
+    },
+    {
+      "path": "agent_diy/model/__init__.py",
+      "source_path": "agent_diy/model/__init__.py",
+      "source_git_blob": "e69de29bb2d1d6434b8b29ae775ad8c2e48c5391",
+      "git_mode": "100644",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "path": "agent_diy/model/model.py",
+      "source_path": "agent_diy/model/model.py",
+      "source_git_blob": "8566ce8cd844ab3422acfd8960124e94032bca13",
+      "git_mode": "100644",
+      "sha256": "ac4cc34026937442e9293e4a8336dbd0394b4aec926155520a6b745b01670b02",
+      "bytes": 575
+    },
+    {
+      "path": "agent_diy/workflow/train_workflow.py",
+      "source_path": "agent_diy/workflow/train_workflow.py",
+      "source_git_blob": "c4e63d08e899222193389c691e1d484029abe3f5",
+      "git_mode": "100644",
+      "sha256": "edb40aa3bfe0be490b7071a85fe86fc0eb5703e79dc954062fae157a84805ad9",
+      "bytes": 10029
+    },
+    {
+      "path": "agent_ppo/__init__.py",
+      "source_path": "agent_ppo/__init__.py",
+      "source_git_blob": "e69de29bb2d1d6434b8b29ae775ad8c2e48c5391",
+      "git_mode": "100644",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "path": "agent_ppo/agent.py",
+      "source_path": "agent_ppo/agent.py",
+      "source_git_blob": "2ac1f685890d1493119616775f6d2ec32270c01f",
+      "git_mode": "100644",
+      "sha256": "cf6c2f40ffd23d72e021f184ec97715a106bce181716d67be2504ea4eb97171e",
+      "bytes": 45555
+    },
+    {
+      "path": "agent_ppo/algorithm/__init__.py",
+      "source_path": "agent_ppo/algorithm/__init__.py",
+      "source_git_blob": "e69de29bb2d1d6434b8b29ae775ad8c2e48c5391",
+      "git_mode": "100644",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "path": "agent_ppo/algorithm/algorithm.py",
+      "source_path": "agent_ppo/algorithm/algorithm.py",
+      "source_git_blob": "d85e2cec7231abc20f2195a9c7f47d8d06b48c7c",
+      "git_mode": "100644",
+      "sha256": "9faf9d478eabcaa1b0e0138c5ab0054f071f6d1ad74a965b6a6a8f0fc3100a9f",
+      "bytes": 235
+    },
+    {
+      "path": "agent_ppo/algorithm/algorithm_v1.py",
+      "source_path": "agent_ppo/algorithm/algorithm_v1.py",
+      "source_git_blob": "cdd2d275121737f4040094193da3dd6eed676bbb",
+      "git_mode": "100644",
+      "sha256": "5ba329dcba9b4d5900d0c2ece2973981783acc615e6f692bd1c18ec92e95a217",
+      "bytes": 41061
+    },
+    {
+      "path": "agent_ppo/conf/__init__.py",
+      "source_path": "agent_ppo/conf/__init__.py",
+      "source_git_blob": "e69de29bb2d1d6434b8b29ae775ad8c2e48c5391",
+      "git_mode": "100644",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "path": "agent_ppo/conf/conf.py",
+      "source_path": "agent_ppo/conf/conf.py",
+      "source_git_blob": "52210e160f2143edb5a9543199c5d6db88ef4457",
+      "git_mode": "100644",
+      "sha256": "88eeb54223e877357fad7ec151288b78093d7879beae17b8aab3e8c11c881414",
+      "bytes": 25074
+    },
+    {
+      "path": "agent_ppo/conf/monitor_builder.py",
+      "source_path": "agent_ppo/conf/monitor_builder.py",
+      "source_git_blob": "1c2e797134fe8ad5918570f0967a6e46bf680dfc",
+      "git_mode": "100644",
+      "sha256": "c5f648dcf71b9518ef08a9e25f80ce06b28d3d4b718c0328b2a1b55699df64c1",
+      "bytes": 13180
+    },
+    {
+      "path": "agent_ppo/conf/train_env_conf.toml",
+      "source_path": "agent_ppo/conf/train_env_conf.toml",
+      "source_git_blob": "fb9296d5360563251b6fdab7f7d06f079c53f75b",
+      "git_mode": "100644",
+      "sha256": "364819f7ff64d6e98bec15f8fc23d5273d6a325ff29c3cd068f87763466da7b4",
+      "bytes": 7278
+    },
+    {
+      "path": "agent_ppo/feature/__init__.py",
+      "source_path": "agent_ppo/feature/__init__.py",
+      "source_git_blob": "e69de29bb2d1d6434b8b29ae775ad8c2e48c5391",
+      "git_mode": "100644",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "path": "agent_ppo/feature/collaboration_v1.py",
+      "source_path": "agent_ppo/feature/collaboration_v1.py",
+      "source_git_blob": "78ae3d57cb4e10ce67accf334aabe489342675b7",
+      "git_mode": "100644",
+      "sha256": "b2d802ef43770031d3c8de9e2b5d4449e3c94cbc659dfa52a9535af1b4880d77",
+      "bytes": 24628
+    },
+    {
+      "path": "agent_ppo/feature/collision_avoidance_v1.py",
+      "source_path": "agent_ppo/feature/collision_avoidance_v1.py",
+      "source_git_blob": "e00dfe0ee2ba292804e8cfeaa7f8f414f16b31db",
+      "git_mode": "100644",
+      "sha256": "b82fb4be4c9a87dd0d5ccb70ea94d3430dbf4171925cee37d5d83a7afec299d0",
+      "bytes": 16230
+    },
+    {
+      "path": "agent_ppo/feature/definition.py",
+      "source_path": "agent_ppo/feature/definition.py",
+      "source_git_blob": "36c6adaf7bb218f9a22dbc524b7415cf2212dff4",
+      "git_mode": "100644",
+      "sha256": "41266f1a12c03acf6b83f1f9d53136b7fd181fd3b89eabfe3b0af110c04ec05a",
+      "bytes": 1063
+    },
+    {
+      "path": "agent_ppo/feature/definition_v1.py",
+      "source_path": "agent_ppo/feature/definition_v1.py",
+      "source_git_blob": "0bbde07a22abeed599352650c5f2c1c638bd1371",
+      "git_mode": "100644",
+      "sha256": "84a79dcffdce5807d25eae4a695be4fb6fb470481d58287d39a91fca8367438b",
+      "bytes": 35343
+    },
+    {
+      "path": "agent_ppo/feature/feature_process/__init__.py",
+      "source_path": "agent_ppo/feature/feature_process/__init__.py",
+      "source_git_blob": "dc215af46a71278b495e1aae8ae3ed2678e30ad0",
+      "git_mode": "100644",
+      "sha256": "3cd0e30e491dafaa6ef13968cc0fd4e77b564f6088cd86f8751073e78806ef7a",
+      "bytes": 8852
+    },
+    {
+      "path": "agent_ppo/feature/feature_process/feature_normalizer.py",
+      "source_path": "agent_ppo/feature/feature_process/feature_normalizer.py",
+      "source_git_blob": "5f0c33cd7c6c601b26171da31afab6896fc17a81",
+      "git_mode": "100644",
+      "sha256": "e92cfd1c4e5d98d247254e135ffa8692bda9821643fa6a1eef7ca34aec07bba5",
+      "bytes": 2641
+    },
+    {
+      "path": "agent_ppo/feature/feature_process/global_feature_config.ini",
+      "source_path": "agent_ppo/feature/feature_process/global_feature_config.ini",
+      "source_git_blob": "332851c005d3ed6d18a212e375e986203afb1714",
+      "git_mode": "100644",
+      "sha256": "65588a7d740b54d80a0bff0d4aedb89c74e6f4bba40923bf149da1ac2df0ece2",
+      "bytes": 798
+    },
+    {
+      "path": "agent_ppo/feature/feature_process/global_process.py",
+      "source_path": "agent_ppo/feature/feature_process/global_process.py",
+      "source_git_blob": "d2bd0d5a117c9e70497a2f1107d6ca7c61bd76e7",
+      "git_mode": "100644",
+      "sha256": "5e89c92bb48824c9f58e727020879146fd36cf92b1ea59f782e18cd524f64dbe",
+      "bytes": 5904
+    },
+    {
+      "path": "agent_ppo/feature/feature_process/hero_feature_config.ini",
+      "source_path": "agent_ppo/feature/feature_process/hero_feature_config.ini",
+      "source_git_blob": "582c5b71bf25c54dd9577b34d031c17cae3703e1",
+      "git_mode": "100644",
+      "sha256": "4b818a8016d6613fc81f6c0fa4eb1befd11e1ec11a71c72ba3e1de6d5c894c70",
+      "bytes": 3350
+    },
+    {
+      "path": "agent_ppo/feature/feature_process/hero_process.py",
+      "source_path": "agent_ppo/feature/feature_process/hero_process.py",
+      "source_git_blob": "87b0d220d448b3573fc395e0c37aaf9a90c72ef2",
+      "git_mode": "100644",
+      "sha256": "4d1a2ba3b8cd760249cdcf94ab7b09d0ebdd7fa8a5f4e496c7aa5f89e80163b0",
+      "bytes": 13061
+    },
+    {
+      "path": "agent_ppo/feature/feature_process/monster_feature_config.ini",
+      "source_path": "agent_ppo/feature/feature_process/monster_feature_config.ini",
+      "source_git_blob": "82ebe80d09506c6623b1605951a5c20ab2a9b4ff",
+      "git_mode": "100644",
+      "sha256": "c79f110299f90152b416f9235f61414631afb6e3842e5a1934c79f51a8f6ca7d",
+      "bytes": 666
+    },
+    {
+      "path": "agent_ppo/feature/feature_process/monster_process.py",
+      "source_path": "agent_ppo/feature/feature_process/monster_process.py",
+      "source_git_blob": "654b44b362a7f0e704eea2b5710e701973bb66d4",
+      "git_mode": "100644",
+      "sha256": "02522900817b88428317f3ffc2a61c1c4bff508140e6b251b3030838a2ca4b48",
+      "bytes": 6550
+    },
+    {
+      "path": "agent_ppo/feature/feature_process/organ_feature_config.ini",
+      "source_path": "agent_ppo/feature/feature_process/organ_feature_config.ini",
+      "source_git_blob": "17b8795b1a611da9739f5c1738822b801ec5352f",
+      "git_mode": "100644",
+      "sha256": "1d2c2d985d6fac8772ccde63ba417f080906c0e94c26428f85d308afc92959c6",
+      "bytes": 814
+    },
+    {
+      "path": "agent_ppo/feature/feature_process/organ_process.py",
+      "source_path": "agent_ppo/feature/feature_process/organ_process.py",
+      "source_git_blob": "18a5967a00d7de48ec3bbb9ba3281378c5183d74",
+      "git_mode": "100644",
+      "sha256": "61fb9d7a7f3850a73d215841189f025ec9c20e5a6e78af0c5e215a5b25527230",
+      "bytes": 8682
+    },
+    {
+      "path": "agent_ppo/feature/feature_process/soldier_feature_config.ini",
+      "source_path": "agent_ppo/feature/feature_process/soldier_feature_config.ini",
+      "source_git_blob": "9934707476609ba39c646c7f790c9def095fd9e6",
+      "git_mode": "100644",
+      "sha256": "bb3de14bd473d9eac6cf562d49ae4388075e83d484c5d65d75dc2b6d7e87689e",
+      "bytes": 678
+    },
+    {
+      "path": "agent_ppo/feature/feature_process/soldier_process.py",
+      "source_path": "agent_ppo/feature/feature_process/soldier_process.py",
+      "source_git_blob": "9a8f4435cebca9a0c7657c4613f9c68e6182e9ce",
+      "git_mode": "100644",
+      "sha256": "fbc9a35484d331cfd65f98dea5b4357d56f15a4f974e05949cb2a766edbb785b",
+      "bytes": 7725
+    },
+    {
+      "path": "agent_ppo/feature/feature_process/v1_feature_process.py",
+      "source_path": "agent_ppo/feature/feature_process/v1_feature_process.py",
+      "source_git_blob": "63893bb145e38b456ff5d8dca2f2dbd01ff7cb31",
+      "git_mode": "100644",
+      "sha256": "e98595306330154c38c8aefbd6c50366afb498eac66dc9713674641fefdbda6b",
+      "bytes": 566980
+    },
+    {
+      "path": "agent_ppo/feature/feature_process/v1_utils.py",
+      "source_path": "agent_ppo/feature/feature_process/v1_utils.py",
+      "source_git_blob": "184bf8d47b8e27f1bba9a67e98acd21f7d2188fa",
+      "git_mode": "100644",
+      "sha256": "074fdecaf37394853523d15dea863e208bded34780d4ae73eb15f6367751ba09",
+      "bytes": 17449
+    },
+    {
+      "path": "agent_ppo/feature/flash_legalizer_v1.py",
+      "source_path": "agent_ppo/feature/flash_legalizer_v1.py",
+      "source_git_blob": "fde190428523aeb63bf2a7215b79f78c84407f85",
+      "git_mode": "100644",
+      "sha256": "dbc39b725e7f68ad4185a48d899a1385ddaafb32eb3fd7a951a59064131046a1",
+      "bytes": 6200
+    },
+    {
+      "path": "agent_ppo/feature/jungle_opening_v1.py",
+      "source_path": "agent_ppo/feature/jungle_opening_v1.py",
+      "source_git_blob": "a76079d48010bdfbeda537a1f0e1ecef136bf1ac",
+      "git_mode": "100644",
+      "sha256": "97be29c388a59296b3bab4373f67f5e56dc43367b01747061b66a8888993c2a6",
+      "bytes": 15915
+    },
+    {
+      "path": "agent_ppo/feature/lane_opening_v1.py",
+      "source_path": "agent_ppo/feature/lane_opening_v1.py",
+      "source_git_blob": "3aa824f0f79fd8030bc120584b80f7ed2854606b",
+      "git_mode": "100644",
+      "sha256": "3cd3aab6d3ac5acb0e51f533a44454dec1a225ab97902df58c8c891b94cc3b8e",
+      "bytes": 7900
+    },
+    {
+      "path": "agent_ppo/feature/safety_legalizer_v1.py",
+      "source_path": "agent_ppo/feature/safety_legalizer_v1.py",
+      "source_git_blob": "0d775e4cce5edce603098468c55ff8b3a1b3b28a",
+      "git_mode": "100644",
+      "sha256": "f37f144e5698d69b5f3dc35552a5a5f0ab2e03ed928bd7f87175ce2448546432",
+      "bytes": 8399
+    },
+    {
+      "path": "agent_ppo/feature/schema_v1.py",
+      "source_path": "agent_ppo/feature/schema_v1.py",
+      "source_git_blob": "2ab2e8acfdf12e1b9212bad3044f3967dafa1b25",
+      "git_mode": "100644",
+      "sha256": "d3cb2946a780bc636f15b96aa7607cc6ee3e45c9857250d64d08f40da4c1ffd2",
+      "bytes": 48959
+    },
+    {
+      "path": "agent_ppo/feature/target_capabilities_v1.py",
+      "source_path": "agent_ppo/feature/target_capabilities_v1.py",
+      "source_git_blob": "5551a4cf998af59f6c352dae11a9c852f9577ef9",
+      "git_mode": "100644",
+      "sha256": "f9ea5ff4b838663a442322f559c6c3ab5213fe2ae524ce932921d948d992d6a3",
+      "bytes": 2205
+    },
+    {
+      "path": "agent_ppo/model/__init__.py",
+      "source_path": "agent_ppo/model/__init__.py",
+      "source_git_blob": "e69de29bb2d1d6434b8b29ae775ad8c2e48c5391",
+      "git_mode": "100644",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "path": "agent_ppo/model/action_v1.py",
+      "source_path": "agent_ppo/model/action_v1.py",
+      "source_git_blob": "9bd482a9942dff6b26a64fc8ec33e7ed206b0ace",
+      "git_mode": "100644",
+      "sha256": "220aa087fbb2bebf1023d0c9bedf7645ea87471017a66812b189f1ac009839e7",
+      "bytes": 9519
+    },
+    {
+      "path": "agent_ppo/model/checkpoint_v1.py",
+      "source_path": "agent_ppo/model/checkpoint_v1.py",
+      "source_git_blob": "3b025ddc88df1d56c3b7afa68a0dd92d06b3bde0",
+      "git_mode": "100644",
+      "sha256": "3f8a0fb8444a18b71040010181eff5c0f7a3dbfbf9ffeb4b607d2b681d1fcb71",
+      "bytes": 12702
+    },
+    {
+      "path": "agent_ppo/model/command_v1.py",
+      "source_path": "agent_ppo/model/command_v1.py",
+      "source_git_blob": "a3257be7d837edb009fb1951847deb27629fe9d1",
+      "git_mode": "100644",
+      "sha256": "56578a9e75f06980a7f22da80edf796c72280393444ac951ff9275b6fb008331",
+      "bytes": 16672
+    },
+    {
+      "path": "agent_ppo/model/model.py",
+      "source_path": "agent_ppo/model/model.py",
+      "source_git_blob": "73f0f01e76a19609439774ef4b70c8125f3f73eb",
+      "git_mode": "100644",
+      "sha256": "97a2da0ee82f3bbc84eeecf8c89ac110549c26fa9ad4893d33ed9d1a89384069",
+      "bytes": 206
+    },
+    {
+      "path": "agent_ppo/model/network_v1.py",
+      "source_path": "agent_ppo/model/network_v1.py",
+      "source_git_blob": "99c53410bb95104465ddd0366447ec0fe20640e5",
+      "git_mode": "100644",
+      "sha256": "81d8f0ccbbf34f5ff5ab6860d5d1e2014285ba950e82cff00aa82c6432501374",
+      "bytes": 42179
+    },
+    {
+      "path": "agent_ppo/tests/test_action_v1.py",
+      "source_path": "agent_ppo/tests/test_action_v1.py",
+      "source_git_blob": "31411aa596fdd442757c09935ca858963e3fa1f9",
+      "git_mode": "100644",
+      "sha256": "01e7e788711f0d42a262e9867cd856d5ec5291886a08315f8749d571efc8af75",
+      "bytes": 5206
+    },
+    {
+      "path": "agent_ppo/tests/test_agent_v1.py",
+      "source_path": "agent_ppo/tests/test_agent_v1.py",
+      "source_git_blob": "4f5dcd680f87dfc9c9f89eb9fa0442bdb10f8e7d",
+      "git_mode": "100644",
+      "sha256": "6a35ce0c4e336af3767fc7843c4ab4fef11755efeac9492cf84430358210a69a",
+      "bytes": 13454
+    },
+    {
+      "path": "agent_ppo/tests/test_algorithm_v1.py",
+      "source_path": "agent_ppo/tests/test_algorithm_v1.py",
+      "source_git_blob": "efa1b1f8a23fcf9a839a22abd999f5d69ead7deb",
+      "git_mode": "100644",
+      "sha256": "17d82dc813d9fdf8b3cb2e6bf55765b3abeb5b0aab749eba5479925504e87a6f",
+      "bytes": 24341
+    },
+    {
+      "path": "agent_ppo/tests/test_checkpoint_v1.py",
+      "source_path": "agent_ppo/tests/test_checkpoint_v1.py",
+      "source_git_blob": "15efb58ea8e33aa934ae8d1bd3b1dff10bf5431a",
+      "git_mode": "100644",
+      "sha256": "36dac3920c1f46061910d02617b2e7852f109d93652c6099b4f83a47dff34a15",
+      "bytes": 25887
+    },
+    {
+      "path": "agent_ppo/tests/test_collaboration_v1.py",
+      "source_path": "agent_ppo/tests/test_collaboration_v1.py",
+      "source_git_blob": "8ee1da6ba3b22f80a87c658b615ca7dc8cceaf0d",
+      "git_mode": "100644",
+      "sha256": "96b6faeee8d026ecacdf194cf4d93b307b22b387bdd07b4f947904d2035d2101",
+      "bytes": 38480
+    },
+    {
+      "path": "agent_ppo/tests/test_collision_avoidance_v1.py",
+      "source_path": "agent_ppo/tests/test_collision_avoidance_v1.py",
+      "source_git_blob": "10f2316cb682ca4ae48aa0a8dcf0d68faa2f216f",
+      "git_mode": "100644",
+      "sha256": "7a11f3ff965140732c296f5515542db7431c2cb6663f898df1c668f00f0a7a29",
+      "bytes": 7267
+    },
+    {
+      "path": "agent_ppo/tests/test_feature_process_v1.py",
+      "source_path": "agent_ppo/tests/test_feature_process_v1.py",
+      "source_git_blob": "b8ffdbde21a2c43420ad3331e01dd86828f56b12",
+      "git_mode": "100644",
+      "sha256": "b5dad618b9a7a4a19ff44d8d8fbb0a0f94877c53e77373a4cdb335953434c1c8",
+      "bytes": 164981
+    },
+    {
+      "path": "agent_ppo/tests/test_flash_legalizer_v1.py",
+      "source_path": "agent_ppo/tests/test_flash_legalizer_v1.py",
+      "source_git_blob": "95aab0e7bb63665c1a76d6829e98a3f5448e6768",
+      "git_mode": "100644",
+      "sha256": "e8a99cac1a4972c2bffa1d219cf9ff4d496bcf49362b8288f957b43cfbdf1cdf",
+      "bytes": 4985
+    },
+    {
+      "path": "agent_ppo/tests/test_frozen_contract_v1.py",
+      "source_path": "agent_ppo/tests/test_frozen_contract_v1.py",
+      "source_git_blob": "06d4c82d92ae85e31e07503b98bb9578d355353d",
+      "git_mode": "100644",
+      "sha256": "3f60f86a8ebb0b6ce3acf82a8a8b1f2e4261fe516058007593be0a9b0385f6a1",
+      "bytes": 15720
+    },
+    {
+      "path": "agent_ppo/tests/test_jungle_opening_v1.py",
+      "source_path": "agent_ppo/tests/test_jungle_opening_v1.py",
+      "source_git_blob": "8271a8e95c44e457749c2a75b2e07fe6c39608a2",
+      "git_mode": "100644",
+      "sha256": "0f31e92067caa16dcd0e6f21da5229a6d3bc06e0937901c82eb1084984f5b071",
+      "bytes": 57628
+    },
+    {
+      "path": "agent_ppo/tests/test_lane_opening_v1.py",
+      "source_path": "agent_ppo/tests/test_lane_opening_v1.py",
+      "source_git_blob": "6373f472d2db7272a5d7f43bae42cb68f6a7c147",
+      "git_mode": "100644",
+      "sha256": "7fd9457de4d58b7f6a7d17cdb72991e44003455718729fb86ecb9191da90dae5",
+      "bytes": 4010
+    },
+    {
+      "path": "agent_ppo/tests/test_monitor_builder_v1.py",
+      "source_path": "agent_ppo/tests/test_monitor_builder_v1.py",
+      "source_git_blob": "38a0c3cea4cef052234ec8fe867410f2354b7a94",
+      "git_mode": "100644",
+      "sha256": "f3b8048044b9a3d94bd71ecb82aa4dd5a379a0e48d3158b5d6e875370330ac54",
+      "bytes": 16697
+    },
+    {
+      "path": "agent_ppo/tests/test_network_v1.py",
+      "source_path": "agent_ppo/tests/test_network_v1.py",
+      "source_git_blob": "0fa19070c256564369c576fbb6df2d1f7f58afc9",
+      "git_mode": "100644",
+      "sha256": "a8c234692b10cf91466f896e8c1f13f61531fd37fe26cf195a620992a35d3787",
+      "bytes": 21794
+    },
+    {
+      "path": "agent_ppo/tests/test_opponent_scheduler_v1.py",
+      "source_path": "agent_ppo/tests/test_opponent_scheduler_v1.py",
+      "source_git_blob": "04f821800bc37d352138f409e918447c39c90da1",
+      "git_mode": "100644",
+      "sha256": "08f0e483e531b13dd2dc5dfba7321a3f05b3dc2f2a228dea89f8c12df29be7ad",
+      "bytes": 2364
+    },
+    {
+      "path": "agent_ppo/tests/test_ppo35_v1.py",
+      "source_path": "agent_ppo/tests/test_ppo35_v1.py",
+      "source_git_blob": "bce3b11ee992193f676b6600a201957d81e9207d",
+      "git_mode": "100644",
+      "sha256": "67df7047b7d51765e5524c0bf2a5f92e74244093ddb832f3476613b1f59d88f6",
+      "bytes": 70621
+    },
+    {
+      "path": "agent_ppo/tests/test_sample_v1.py",
+      "source_path": "agent_ppo/tests/test_sample_v1.py",
+      "source_git_blob": "baf56ec3356c49be2d8dad8444b133e3b3d12a05",
+      "git_mode": "100644",
+      "sha256": "0ee2e3109b2ed2fdb45b0900a9adae8fa6cd63199bf046e0ea320ffd888bc23f",
+      "bytes": 26133
+    },
+    {
+      "path": "agent_ppo/tests/test_training_config_v1.py",
+      "source_path": "agent_ppo/tests/test_training_config_v1.py",
+      "source_git_blob": "485e1205bcc005f05821a4dd986cd6ba1d557467",
+      "git_mode": "100644",
+      "sha256": "a7bc6cb1071052e209c8ffb8e2a652d4bde3520d5929e68fe5595ba6f68d36ee",
+      "bytes": 11729
+    },
+    {
+      "path": "agent_ppo/tests/test_workflow_v1.py",
+      "source_path": "agent_ppo/tests/test_workflow_v1.py",
+      "source_git_blob": "9251657846126a6587895e49e471b79dde684509",
+      "git_mode": "100644",
+      "sha256": "ab4007c7aff74111c726229ba8e137e3b6762332f7f81a2e90d91511d8e51067",
+      "bytes": 805
+    },
+    {
+      "path": "agent_ppo/workflow/opponent_scheduler_v1.py",
+      "source_path": "agent_ppo/workflow/opponent_scheduler_v1.py",
+      "source_git_blob": "2f01734c4231cc1bc1e3ea9e3cc25c39b51464e4",
+      "git_mode": "100644",
+      "sha256": "5aa5deb60ed450933db93c9868377695875dc348ebce6ceaf267031cca463ce7",
+      "bytes": 3124
+    },
+    {
+      "path": "agent_ppo/workflow/train_workflow.py",
+      "source_path": "agent_ppo/workflow/train_workflow.py",
+      "source_git_blob": "b196170d8b3a40078f6a2fa9fc2ad9068ce8ca5b",
+      "git_mode": "100644",
+      "sha256": "70da51d47b3bcfecb5bf768b24ac08b99345daeba0a13ccecf290a5b35ad1db4",
+      "bytes": 64207
+    },
+    {
+      "path": "conf/__init__.py",
+      "source_path": "conf/__init__.py",
+      "source_git_blob": "e69de29bb2d1d6434b8b29ae775ad8c2e48c5391",
+      "git_mode": "100644",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "path": "conf/algo_conf_hok3v3_collaboration.toml",
+      "source_path": "conf/algo_conf_hok3v3_collaboration.toml",
+      "source_git_blob": "4b1bcf36e3866863fd333941f31fcff2b23f2a56",
+      "git_mode": "100644",
+      "sha256": "986eedc6b64343c08a0233ffd692a2455fb14536a95846d51b88ef5fd06caa69",
+      "bytes": 613
+    },
+    {
+      "path": "conf/app_conf_hok3v3_collaboration.toml",
+      "source_path": "conf/app_conf_hok3v3_collaboration.toml",
+      "source_git_blob": "8872c5a2323a9bf8124fd0e1a765b345e8b3401a",
+      "git_mode": "100644",
+      "sha256": "8724b791450945e069e2359c03b6365bc784e78f65785959de4d6599e417c229",
+      "bytes": 403
+    },
+    {
+      "path": "conf/configure_app.toml",
+      "source_path": "conf/configure_app.toml",
+      "source_git_blob": "f53d362793c2e8b0427d4c0840919c32e85961c6",
+      "git_mode": "100644",
+      "sha256": "86cb4e8ce95ea51820a26e66e9c23082fd018a911346161ff24d9b79de550185",
+      "bytes": 5646
+    },
+    {
+      "path": "tools/render_kai_opening_route_proposal.py",
+      "source_path": "tools/render_kai_opening_route_proposal.py",
+      "source_git_blob": "3bccfb73999715a0ac9cff42e658c5e2c96cf2e8",
+      "git_mode": "100644",
+      "sha256": "33900f7f8bc7f18d88905aa70b6630b8c35f6e18a7af0374bfbbb13f6f041252",
+      "bytes": 6871
+    }
+  ]
+}

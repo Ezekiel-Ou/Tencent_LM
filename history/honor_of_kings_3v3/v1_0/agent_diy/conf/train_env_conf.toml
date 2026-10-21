@@ -1,0 +1,188 @@
+[monitor]
+# Monitor side, statistics are from the perspective of this side
+# Type: integer, range [0, 1]
+# 0 represents the blue camp, 1 represents the red camp
+# 监控上报的阵营，类型整型，取值范围[0,1]
+# 0表示蓝方阵营，1表示红方阵营
+monitor_side = 0  
+
+# Auto switch monitor side, Type: boolean, value range: [true, false]
+# 是否启用自动换边逻辑，类型布尔值，true表示开启，false表示关闭
+auto_switch_monitor_side = true
+
+[episode]
+# Opponent agent, Type: string, range [selfplay, common_ai, custom_model_id]
+# 1. selfplay: Indicates self-play
+# 2. common_ai: Indicates playing against a rule-based common AI
+# 3. custom_model_id: Indicates playing against a custom model specified by its model ID
+# 对手智能体，类型字符串，取值范围[selfplay, common_ai, 自定义模型id]
+# 1. selfplay：自对弈
+# 2. common_ai：与基于规则的common_ai对战
+# 3. 自定义的模型id：与指定的模型对战，需要先将模型上传至模型管理，并且将模型ID配置在kaiwu.json中，然后在此处进行引用
+opponent_agent = "selfplay"
+
+# Evaluation interval (unit: games), Type: integer, value range: integer >= 1
+# 评估间隔(单位局)，类型整型，取值范围为大于等于1的整数
+eval_interval = 25
+
+# Evaluation opponent type, Type: string, value range: [selfplay, common_ai, custom_model_id]
+# Please refer to the opponent agent annotation for the meaning of the value
+# 评估对手类型，类型字符串，取值范围为[selfplay, common_ai, 自定义模型id]
+# 值的含义请参考opponent_agent注释
+eval_opponent_type = "common_ai"
+
+[collaboration_command]
+# Command types: target position, target object, interrupt. Interrupt commands are not restricted by the following configurations
+# Command duration (unit: frame). Type: integer, value range: [0,20000]
+# 指令一共分为三种类型，指定目标位置、指定目标对象、中断。其中，中断指令不受以下指令配置限制
+# 指令的持续时间(单位帧)。类型整型，取值范围为[0,20000]
+command_duration = 300
+
+# Command cooldown (unit: frame). Type: integer, value range: [0,20000]
+# 指令的冷却时间(单位帧)。类型整型，取值范围为[0,20000]
+command_cooldown = 100
+
+# Blue camp lineup configuration
+# 蓝方阵容配置。
+[lineups.blue_camp]
+# is_official_model_enabled: Whether to enable official model control. Type: boolean, true=enabled, false=disabled
+# is_official_model_enabled表示是否启用官方模型控制，类型布尔值，true表示启用官方模型控制，false表示不启用官方模型控制
+is_official_model_enabled = false
+
+# official_model: hero ID controlled by the official model in the blue camp
+# Type: integer, allowed values [132, 141, 193], 132: Marco Polo, 141: Diaochan, 193: Kaizer
+# official_model表示蓝方阵营中官方模型控制的英雄id
+# 类型整数，取值范围[132, 141, 193]，132表示马可波罗，141表示貂蝉，193表示铠
+official_model = 132
+
+# Red camp lineup configuration
+# 红方阵容配置。
+[lineups.red_camp]
+# is_official_model_enabled: Whether to enable official model control. Type: boolean, true=enabled, false=disabled
+# is_official_model_enabled表示是否启用官方模型控制，类型布尔值，true表示启用官方模型控制，false表示不启用官方模型控制
+is_official_model_enabled = false
+
+# official_model: hero ID controlled by the official model in the red camp
+# Type: integer, allowed values [132, 141, 193], 132: Marco Polo, 141: Diaochan, 193: Kaizer
+# official_model表示红方阵营中官方模型控制的英雄id
+# 类型整数，取值范围[132, 141, 193]，132表示马可波罗，141表示貂蝉，193表示铠
+official_model = 132
+
+[reward_policies]
+# Whether to enable zero-sum reward mechanism
+# 是否启用零和奖励机制
+whether_use_zero_sum_reward = true
+
+# Team spirit coefficient
+# 团队协作精神系数
+team_spirit = 0.2
+
+# Time scaling discount factor
+# 时间衰减折扣因子
+time_scaling_discount = 0.75
+
+# Base duration for time scaling
+# 时间缩放基准时长
+time_scaling_time = 4500
+
+# Default reward policy for heroes not configured by customer
+# 未进行customer奖励配置的英雄将使用以下默认配置（默认配置可修改）
+[reward_policies.default]
+
+# HP ratio to the fourth root
+# 血量比值开四次方
+hp_rate_sqrt_sqrt = 0
+
+# Economy growth value (Gold)
+# 经济增长值
+money = 0
+
+# Experience growth value
+# 经验增长值
+exp = 0
+
+# Tower health points
+# 塔血量
+tower = 1.5
+
+# Hero kills counter
+# 击杀
+killCnt = 0
+
+# Deaths counter (penalty)
+# 死亡
+deadCnt = 0
+
+# Assists counter
+# 助攻
+assistCnt = 0
+
+# Total damage dealt to heroes
+# 对英雄伤害值
+total_hurt_to_hero = 0
+
+# Damage to monsters
+# 攻击野怪
+atk_monster = 0
+
+# Destroy enemy crystal
+# 摧毁敌方水晶
+win_crystal = 6
+
+# Attacking enemy crystal
+# 攻击敌方水晶
+atk_crystal = 3
+
+# Can copy multiple customer reward configurations to specify different heroes
+# 可以复制多个customer奖励配置指定不同英雄
+[[reward_policies.customer]]
+
+# hero_ids represents the hero IDs using this reward configuration
+# List element type is integer, valid values [132, 141, 193], 132: Marco Polo, 141: Diaochan, 193: Kaizer
+# hero_ids表示使用该奖励配置的英雄id
+# 列表元素类型为整数，取值范围[132, 141, 193]，132表示马可波罗，141表示貂蝉，193表示铠
+hero_ids = []
+
+# HP ratio to the fourth root
+# 血量比值开四次方
+hp_rate_sqrt_sqrt = 0
+
+# Economy growth value (Gold)
+# 经济增长值
+money = 0
+
+# Experience growth value
+# 经验增长值
+exp = 0
+
+# Tower health points
+# 塔血量
+tower = 1.5
+
+# Hero kills counter
+# 击杀
+killCnt = 0
+
+# Deaths counter (penalty)
+# 死亡
+deadCnt = 0
+
+# Assists counter
+# 助攻
+assistCnt = 0
+
+# Total damage dealt to heroes
+# 对英雄伤害值
+total_hurt_to_hero = 0
+
+# Damage to monsters
+# 攻击野怪
+atk_monster = 0
+
+# Destroy enemy crystal
+# 摧毁敌方水晶
+win_crystal = 6
+
+# Attacking enemy crystal
+# 攻击敌方水晶
+atk_crystal = 3

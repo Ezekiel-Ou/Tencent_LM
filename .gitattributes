@@ -1,0 +1,2 @@
+# Preserve the exact upstream bytes of historical source snapshots.
+history/** -text

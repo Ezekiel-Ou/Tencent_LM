@@ -61,9 +61,18 @@
 
 各项目的实验条件、截图和局限见详细 README。历史结果不保证与当前源码逐项对应，仓库未附训练权重。
 
+## 版本迭代记录
+
+[历史版本总索引](history/README.md)收录六个带来源提交和作者记录的里程碑快照：
+
+- **王者荣耀 1v1**：[v2.9](history/honor_of_kings_1v1/v2_9/README.md)、[v3.5](history/honor_of_kings_1v1/v3_5/README.md)、[v4.3 阶段收尾版本](history/honor_of_kings_1v1/v4_3/README.md)。
+- **王者荣耀 3v3**：[v1.0](history/honor_of_kings_3v3/v1_0/README.md)、[v3.5](history/honor_of_kings_3v3/v3_5/README.md)、[v4.0](history/honor_of_kings_3v3/v4_0/README.md)。
+
+各历史目录独立保存运行源码、配置和文件指纹，具体改动与复现条件见对应版本说明。当前最终实现位于上方项目导航列出的赛题目录。
+
 ## 训练与复现
 
-环境准备、算法入口选择、历史权重配置、训练检查与评测记录方式见[训练与复现说明](TRAINING_AND_REPRODUCTION.md)。首次运行前，请先核对所选项目的平台配置、模型路径和对手模型是否可用。
+环境准备、算法入口选择、历史权重配置、训练检查与评测记录方式见[训练与复现说明](docs/training_and_reproduction.md)。首次运行前，请先核对所选项目的平台配置、模型路径和对手模型是否可用。
 
 ## 目录与阅读方式
 
@@ -78,7 +87,7 @@ Tencent_LM/
 └── honor_of_kings_3v3/
 ```
 
-各项目的 `introduction/PROJECT_INTRODUCTION.md` 介绍任务规则，`introduction/README.md` 说明具体实现和实验，`introduction/images/` 保存对应展示素材。算法代码位于 `agent_*`，平台入口及运行配置位于 `conf/`。
+各项目的 `introduction/project_introduction.md` 介绍任务规则，`introduction/README.md` 说明具体实现和实验，`introduction/images/` 保存对应展示素材。算法代码位于 `agent_*`，平台入口及运行配置位于 `conf/`。
 
 代码依赖腾讯开悟对应赛题的运行环境及 SDK。运行时以所选项目目录作为工作目录，并检查算法入口、环境配置和模型路径；仅安装 PyTorch 不足以独立启动完整训练。
 

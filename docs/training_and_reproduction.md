@@ -1,6 +1,6 @@
 # 训练与复现说明
 
-本文说明五个项目的环境准备、算法选择、训练检查、模型加载与评测记录方式。各项目的算法设计和历史成绩见根目录 [README](README.md) 及对应的 `introduction/README.md`。
+本文说明五个项目的环境准备、算法选择、训练检查、模型加载与评测记录方式。各项目的算法设计和历史成绩见根目录 [README](../README.md) 及对应的 `introduction/README.md`。
 
 源码核对基线为 [`ea14758958bdb8c8d35c592c698e9e9da65558ed`](https://github.com/Ezekiel-Ou/Tencent_LM/commit/ea14758958bdb8c8d35c592c698e9e9da65558ed)。下述配置值来自该版本；复现时应记录实际使用的提交和配置修改。
 
@@ -20,6 +20,14 @@
 
 五个项目应放在各自的赛题工程中运行。它们重复使用 `agent_ppo`、`conf` 等模块名，将多个项目同时加入同一 Python 导入路径可能加载错误实现。
 
+### 历史版本的复现
+
+[版本总索引](../history/README.md)按赛道收录六个独立快照。复现历史版本时，从所选 `history/<赛题>/v主版本_次版本/` 目录取得算法和配置，并核对其中 `snapshot.json` 的来源与文件指纹；实际运行时以该版本作为项目根目录。
+
+历史 1v1 的候选算法包为 `agent_diy`，3v3 主线为 `agent_ppo`。各版入口、样本格式、奖励和检查点协议可能与当前最终版不同，下文的默认配置表以文首注明的最终版核对基线为准，不能直接覆盖到所有历史版本。
+
+历史目录的源码保留原始字节；平台依赖、模型权重和必要的运行时配置仍需按对应版本准备。归档中的原始作者时间是来源记录，不是本次重新训练或评测的时间。
+
 ## 2. 选择项目与算法入口
 
 训练配置分为三个层次：
@@ -34,24 +42,24 @@
 
 | 项目 | 算法名 | Agent 与训练实现 | 映射来源 |
 | --- | --- | --- | --- |
-| 峡谷漫步 PPO | `diy` | `agent_ppo` | [algo_conf_gorge_walk.toml](gorge_walk/conf/algo_conf_gorge_walk.toml) |
+| 峡谷漫步 PPO | `diy` | `agent_ppo` | [algo_conf_gorge_walk.toml](../gorge_walk/conf/algo_conf_gorge_walk.toml) |
 | 峡谷漫步动态规划 | `dynamic_programming` | `agent_dynamic_programming` | 同上 |
-| 重返秘境 DQN | `dqn` | `agent_dqn` | [algo_conf_back_to_the_realm.toml](back_to_the_realm/conf/algo_conf_back_to_the_realm.toml) |
+| 重返秘境 DQN | `dqn` | `agent_dqn` | [algo_conf_back_to_the_realm.toml](../back_to_the_realm/conf/algo_conf_back_to_the_realm.toml) |
 | 重返秘境阶段目标 DQN | `target_dqn` | `agent_target_dqn` | 同上 |
-| 峡谷追猎 PPO | `ppo` | `agent_ppo` | [algo_conf_gorge_chase.toml](gorge_chase/conf/algo_conf_gorge_chase.toml) |
-| 王者荣耀 1v1 | `diy` 或 `ppo` | 两个入口均指向 `agent_ppo` | [algo_conf_hok1v1.toml](honor_of_kings_1v1/conf/algo_conf_hok1v1.toml) |
-| 王者荣耀 3v3 | `ppo` | `agent_ppo` | [algo_conf_hok3v3_collaboration.toml](honor_of_kings_3v3/conf/algo_conf_hok3v3_collaboration.toml) |
+| 峡谷追猎 PPO | `ppo` | `agent_ppo` | [algo_conf_gorge_chase.toml](../gorge_chase/conf/algo_conf_gorge_chase.toml) |
+| 王者荣耀 1v1 | `diy` 或 `ppo` | 两个入口均指向 `agent_ppo` | [algo_conf_hok1v1.toml](../honor_of_kings_1v1/conf/algo_conf_hok1v1.toml) |
+| 王者荣耀 3v3 | `ppo` | `agent_ppo` | [algo_conf_hok3v3_collaboration.toml](../honor_of_kings_3v3/conf/algo_conf_hok3v3_collaboration.toml) |
 
 启动前要核对平台启动参数、`configure_app.toml` 中的 `app.algo`（若存在）和 `app_conf_*.toml` 中各策略的 `algo`，确认它们最终选择同一套实现。实际配置加载顺序取决于配套 SDK，应从启动日志再次确认 Agent 和工作流的模块路径。
 
 当前上传版本有以下需要人工确认的地方：
 
-- **峡谷漫步**：[configure_app.toml](gorge_walk/conf/configure_app.toml) 写的是 `algo = "diy"`，而 [app_conf_gorge_walk.toml](gorge_walk/conf/app_conf_gorge_walk.toml) 的 `train_one` 写的是 `dynamic_programming`。先选择 PPO 或动态规划，再统一相关入口。
-- **重返秘境**：[configure_app.toml](back_to_the_realm/conf/configure_app.toml) 写的是 `target_dqn`，而 [app_conf_back_to_the_realm.toml](back_to_the_realm/conf/app_conf_back_to_the_realm.toml) 的 `train_one` 写的是 `dqn`。选择阶段目标版本时，应核对策略也指向 `target_dqn`。
-- **王者荣耀 3v3**：`diy` 指向 `agent_ppo_debug`，用于官方英雄技能和指令调试。正常训练使用 `ppo`；活动参数由 [FrozenV1Config、V1TrainingConfig 和 Config](honor_of_kings_3v3/agent_ppo/conf/conf.py) 定义，`LegacyConfig` 不能作为当前网络的参数依据。
+- **峡谷漫步**：[configure_app.toml](../gorge_walk/conf/configure_app.toml) 写的是 `algo = "diy"`，而 [app_conf_gorge_walk.toml](../gorge_walk/conf/app_conf_gorge_walk.toml) 的 `train_one` 写的是 `dynamic_programming`。先选择 PPO 或动态规划，再统一相关入口。
+- **重返秘境**：[configure_app.toml](../back_to_the_realm/conf/configure_app.toml) 写的是 `target_dqn`，而 [app_conf_back_to_the_realm.toml](../back_to_the_realm/conf/app_conf_back_to_the_realm.toml) 的 `train_one` 写的是 `dqn`。选择阶段目标版本时，应核对策略也指向 `target_dqn`。
+- **王者荣耀 3v3**：`diy` 指向 `agent_ppo_debug`，用于官方英雄技能和指令调试。正常训练使用 `ppo`；活动参数由 [FrozenV1Config、V1TrainingConfig 和 Config](../honor_of_kings_3v3/agent_ppo/conf/conf.py) 定义，`LegacyConfig` 不能作为当前网络的参数依据。
 - 算法映射中仍保留部分未随仓库上传的模板目录，例如 `agent_monte_carlo`、`agent_q_learning`、`agent_sarsa`、`agent_diy`。选择这些入口前需确认官方工程中确有对应实现。
 
-峡谷漫步的 `configure_app.toml` 还保留 `sample_dim = 6`，PPO 的 [Config.SAMPLE_DIM](gorge_walk/agent_ppo/conf/conf.py) 则为 505。其 [PPO 工作流](gorge_walk/agent_ppo/workflow/train_workflow.py) 当前直接调用 `agent.learn(g_data)`，不能简单套用其他项目的样本传输方式。使用 Learner/Reverb 等平台链路时，应按所选实现和 SDK 核对实际序列化格式、样本维度与批次，避免仅凭模板字段修改维度。
+峡谷漫步的 `configure_app.toml` 还保留 `sample_dim = 6`，PPO 的 [Config.SAMPLE_DIM](../gorge_walk/agent_ppo/conf/conf.py) 则为 505。其 [PPO 工作流](../gorge_walk/agent_ppo/workflow/train_workflow.py) 当前直接调用 `agent.learn(g_data)`，不能简单套用其他项目的样本传输方式。使用 Learner/Reverb 等平台链路时，应按所选实现和 SDK 核对实际序列化格式、样本维度与批次，避免仅凭模板字段修改维度。
 
 ## 3. 环境配置与训练参数
 
@@ -61,18 +69,18 @@
 
 | 项目 | 环境配置 | 当前主要设置 |
 | --- | --- | --- |
-| 峡谷漫步 | [PPO](gorge_walk/agent_ppo/conf/train_env_conf.toml)、[动态规划](gorge_walk/agent_dynamic_programming/conf/train_env_conf.toml) | 起点 `[29, 9]`，终点 `[11, 55]`，固定 10 个宝箱，单局最多 2000 步 |
-| 重返秘境 | [target_dqn](back_to_the_realm/agent_target_dqn/conf/train_env_conf.toml)、[dqn](back_to_the_realm/agent_dqn/conf/train_env_conf.toml) | 起点 2，终点 1，随机 13 个宝箱，闪现技能，单局最多 2000 步 |
-| 峡谷追猎 | [train_env_conf.toml](gorge_chase/agent_ppo/conf/train_env_conf.toml) | 地图 1～10，`map_random = false`，10 个宝箱，2 个增益，单局最多 1000 步 |
-| 王者荣耀 1v1 | [train_env_conf.toml](honor_of_kings_1v1/agent_ppo/conf/train_env_conf.toml) | 混合训练对手；`eval_interval = 20`；阵容和召唤师技能还受工作流与算法配置控制 |
-| 王者荣耀 3v3 | [train_env_conf.toml](honor_of_kings_3v3/agent_ppo/conf/train_env_conf.toml) | 自博弈，自动切换监控阵营；协作指令持续 300 帧、冷却 100 帧 |
+| 峡谷漫步 | [PPO](../gorge_walk/agent_ppo/conf/train_env_conf.toml)、[动态规划](../gorge_walk/agent_dynamic_programming/conf/train_env_conf.toml) | 起点 `[29, 9]`，终点 `[11, 55]`，固定 10 个宝箱，单局最多 2000 步 |
+| 重返秘境 | [target_dqn](../back_to_the_realm/agent_target_dqn/conf/train_env_conf.toml)、[dqn](../back_to_the_realm/agent_dqn/conf/train_env_conf.toml) | 起点 2，终点 1，随机 13 个宝箱，闪现技能，单局最多 2000 步 |
+| 峡谷追猎 | [train_env_conf.toml](../gorge_chase/agent_ppo/conf/train_env_conf.toml) | 地图 1～10，`map_random = false`，10 个宝箱，2 个增益，单局最多 1000 步 |
+| 王者荣耀 1v1 | [train_env_conf.toml](../honor_of_kings_1v1/agent_ppo/conf/train_env_conf.toml) | 混合训练对手；`eval_interval = 20`；阵容和召唤师技能还受工作流与算法配置控制 |
+| 王者荣耀 3v3 | [train_env_conf.toml](../honor_of_kings_3v3/agent_ppo/conf/train_env_conf.toml) | 自博弈，自动切换监控阵营；协作指令持续 300 帧、冷却 100 帧 |
 
 各项目还有以下运行条件：
 
-- **动态规划**：[训练工作流](gorge_walk/agent_dynamic_programming/workflow/train_workflow.py) 读取 [F_level_1.json](gorge_walk/conf/map_data/F_level_1.json) 后执行规划并保存策略表。应保持地图、起终点、固定宝箱设置与 [预设宝箱顺序](gorge_walk/agent_dynamic_programming/conf/conf.py) 一致。它的训练过程不等同于 PPO 的环境采样和梯度更新。
-- **峡谷追猎**：当前 [CURRICULUM_AUTO](gorge_chase/agent_ppo/conf/conf.py) 为 `False`，读取普通 `train_env_conf.toml`。启用课程模式后，工作流才会选择 `train_env_conf_stage1.toml` 到 `stage4.toml`；`CURRICULUM_STAGE_OVERRIDE` 也要结合该开关使用。阶段由当前进程的局数推进，重启后的进度需要另行确认。
+- **动态规划**：[训练工作流](../gorge_walk/agent_dynamic_programming/workflow/train_workflow.py) 读取 [F_level_1.json](../gorge_walk/conf/map_data/F_level_1.json) 后执行规划并保存策略表。应保持地图、起终点、固定宝箱设置与 [预设宝箱顺序](../gorge_walk/agent_dynamic_programming/conf/conf.py) 一致。它的训练过程不等同于 PPO 的环境采样和梯度更新。
+- **峡谷追猎**：当前 [CURRICULUM_AUTO](../gorge_chase/agent_ppo/conf/conf.py) 为 `False`，读取普通 `train_env_conf.toml`。启用课程模式后，工作流才会选择 `train_env_conf_stage1.toml` 到 `stage4.toml`；`CURRICULUM_STAGE_OVERRIDE` 也要结合该开关使用。阶段由当前进程的局数推进，重启后的进度需要另行确认。
 - **王者荣耀 1v1**：默认训练对手为 `selfplay`、`290819`、`278480`，权重为 `0.60 / 0.30 / 0.10`，评估对手池也包含这两个历史模型 ID。这些 ID 在新的账号或环境中不一定可用；要先导入对应模型并配置 `kaiwu.json`，或明确改成可用对手。
-- **王者荣耀 3v3**：工作流按 [13 局阵容块](honor_of_kings_3v3/agent_ppo/conf/conf.py) 轮换双方官方英雄，TOML 中的英雄初值不代表训练全程固定阵容。`OPPONENT_MIX_ENABLED = False`，代码中的 9:1 混合对手调度未开启。`eval_interval = 10000000000`，不能据此认为训练中已持续评估对 `common_ai` 的胜率。
+- **王者荣耀 3v3**：工作流按 [13 局阵容块](../honor_of_kings_3v3/agent_ppo/conf/conf.py) 轮换双方官方英雄，TOML 中的英雄初值不代表训练全程固定阵容。`OPPONENT_MIX_ENABLED = False`，代码中的 9:1 混合对手调度未开启。`eval_interval = 10000000000`，不能据此认为训练中已持续评估对 `common_ai` 的胜率。
 
 若 1v1 暂时没有历史对手模型，可在匹配的平台环境中先用 `common_ai` 验证流程。修改现有 `[episode]` 表中的下列字段，并保留其余所需配置，不要重复声明同名表：
 
@@ -92,11 +100,11 @@ eval_opponent_types = ["common_ai"]
 
 | 实现 | 参数来源 | 部分默认值 |
 | --- | --- | --- |
-| 峡谷漫步 PPO | [conf.py](gorge_walk/agent_ppo/conf/conf.py) | Actor / Critic 学习率 `3e-4 / 1e-3`，γ / λ 为 `0.95 / 0.95`，PPO 更新 4 轮，微批次 256 |
-| 重返秘境 target_dqn | [conf.py](back_to_the_realm/agent_target_dqn/conf/conf.py) | 学习率 `1e-4`，γ 为 `0.995`，探索率从 `1.0` 衰减到 `0.05` |
-| 峡谷追猎 PPO | [conf.py](gorge_chase/agent_ppo/conf/conf.py) | 初始学习率 `3e-4`，γ / λ 为 `0.995 / 0.97`，PPO clip 为 `0.2` |
-| 王者荣耀 1v1 | [conf.py](honor_of_kings_1v1/agent_ppo/conf/conf.py) | 初始学习率 `3e-5`，目标学习率 `1e-5`，γ / λ 为 `0.995 / 0.95` |
-| 王者荣耀 3v3 | [V1TrainingConfig](honor_of_kings_3v3/agent_ppo/conf/conf.py) | 学习率 `2e-4`，γ / λ 为 `0.997 / 0.97`，微批次 256，开启 AMP 支持 |
+| 峡谷漫步 PPO | [conf.py](../gorge_walk/agent_ppo/conf/conf.py) | Actor / Critic 学习率 `3e-4 / 1e-3`，γ / λ 为 `0.95 / 0.95`，PPO 更新 4 轮，微批次 256 |
+| 重返秘境 target_dqn | [conf.py](../back_to_the_realm/agent_target_dqn/conf/conf.py) | 学习率 `1e-4`，γ 为 `0.995`，探索率从 `1.0` 衰减到 `0.05` |
+| 峡谷追猎 PPO | [conf.py](../gorge_chase/agent_ppo/conf/conf.py) | 初始学习率 `3e-4`，γ / λ 为 `0.995 / 0.97`，PPO clip 为 `0.2` |
+| 王者荣耀 1v1 | [conf.py](../honor_of_kings_1v1/agent_ppo/conf/conf.py) | 初始学习率 `3e-5`，目标学习率 `1e-5`，γ / λ 为 `0.995 / 0.95` |
+| 王者荣耀 3v3 | [V1TrainingConfig](../honor_of_kings_3v3/agent_ppo/conf/conf.py) | 学习率 `2e-4`，γ / λ 为 `0.997 / 0.97`，微批次 256，开启 AMP 支持 |
 
 平台的 `train_batch_size` 与算法内部微批次不是同一个字段。例如 3v3 的平台训练批次为 1024，算法微批次为 256。修改批次或样本格式时，需要同时核对平台和算法的实际处理方式。
 
@@ -171,8 +179,8 @@ python -m compileall -q agent_ppo
 
 | 项目 | 配置来源 | 当前预加载设置 |
 | --- | --- | --- |
-| 王者荣耀 1v1 | [configure_app.toml](honor_of_kings_1v1/conf/configure_app.toml) | `preload_model = true`，目录 `/data/pre_model/ckpt`，ID `397045` |
-| 王者荣耀 3v3 | [configure_app.toml](honor_of_kings_3v3/conf/configure_app.toml) | `preload_model = true`，目录 `/data/pre_model/ckpt`，ID `396387` |
+| 王者荣耀 1v1 | [configure_app.toml](../honor_of_kings_1v1/conf/configure_app.toml) | `preload_model = true`，目录 `/data/pre_model/ckpt`，ID `397045` |
+| 王者荣耀 3v3 | [configure_app.toml](../honor_of_kings_3v3/conf/configure_app.toml) | `preload_model = true`，目录 `/data/pre_model/ckpt`，ID `396387` |
 
 根据实验目标选择初始化方式：
 
@@ -185,12 +193,12 @@ python -m compileall -q agent_ppo
 
 | 实现 | 保存方式与入口 | 加载时需要注意 |
 | --- | --- | --- |
-| 峡谷漫步动态规划 | [agent.py](gorge_walk/agent_dynamic_programming/agent.py)：`model.ckpt-<id>.npy` | 保存的是策略表，需要匹配状态编码和地图设置 |
-| 峡谷漫步 PPO | [agent.py](gorge_walk/agent_ppo/agent.py)：`ppo_model_<id>.pt` | 工作流保存 `best` 和 `latest`；不能假定与其他项目的 `model.ckpt-<id>.pkl` 命名相同 |
-| 重返秘境 | [target_dqn/agent.py](back_to_the_realm/agent_target_dqn/agent.py)、[dqn/agent.py](back_to_the_realm/agent_dqn/agent.py)：`model.ckpt-<id>.pkl` | 区分 DQN 与阶段目标版本，核对网络结构及加载日志 |
-| 峡谷追猎 | [agent.py](gorge_chase/agent_ppo/agent.py)：`model.ckpt-<id>.pkl` | 核对特征、网络和环境设置 |
-| 王者荣耀 1v1 | [agent.py](honor_of_kings_1v1/agent_ppo/agent.py) | 新检查点包含协议元数据，并保存 `.meta.json` 附属文件；模型归档时一并保留 |
-| 王者荣耀 3v3 | [checkpoint_v1.py](honor_of_kings_3v3/agent_ppo/model/checkpoint_v1.py) | 检查点包含格式版本和协议签名；兼容迁移以加载器明确支持的范围为准 |
+| 峡谷漫步动态规划 | [agent.py](../gorge_walk/agent_dynamic_programming/agent.py)：`model.ckpt-<id>.npy` | 保存的是策略表，需要匹配状态编码和地图设置 |
+| 峡谷漫步 PPO | [agent.py](../gorge_walk/agent_ppo/agent.py)：`ppo_model_<id>.pt` | 工作流保存 `best` 和 `latest`；不能假定与其他项目的 `model.ckpt-<id>.pkl` 命名相同 |
+| 重返秘境 | [target_dqn/agent.py](../back_to_the_realm/agent_target_dqn/agent.py)、[dqn/agent.py](../back_to_the_realm/agent_dqn/agent.py)：`model.ckpt-<id>.pkl` | 区分 DQN 与阶段目标版本，核对网络结构及加载日志 |
+| 峡谷追猎 | [agent.py](../gorge_chase/agent_ppo/agent.py)：`model.ckpt-<id>.pkl` | 核对特征、网络和环境设置 |
+| 王者荣耀 1v1 | [agent.py](../honor_of_kings_1v1/agent_ppo/agent.py) | 新检查点包含协议元数据，并保存 `.meta.json` 附属文件；模型归档时一并保留 |
+| 王者荣耀 3v3 | [checkpoint_v1.py](../honor_of_kings_3v3/agent_ppo/model/checkpoint_v1.py) | 检查点包含格式版本和协议签名；兼容迁移以加载器明确支持的范围为准 |
 
 模型保存受平台 `dump_model_freq`、同步配置及部分工作流中的定时保存逻辑共同影响。应以实际产物和日志确认保存位置、时间与 ID，不要只根据训练时长推断模型步数。
 

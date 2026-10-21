@@ -1,0 +1,315 @@
+#!/usr/bin/env python3
+"""Formal PPO training monitor panels."""
+
+from kaiwudrl.common.monitor.monitor_config_builder import MonitorConfigBuilder
+
+from agent_ppo.conf.conf import FrozenV1Config
+
+
+def build_monitor():
+    core_metrics = (
+        ("reward", "回报"),
+        ("actor_policy_loss", "角色策略损失"),
+        ("actor_value_loss", "角色价值损失"),
+        ("actor_entropy", "角色熵"),
+        ("actor_approx_kl", "角色近似 KL"),
+        ("actor_clip_fraction", "角色裁剪比例"),
+        ("actor_dual_clip_fraction", "角色 Dual-Clip 触发比例"),
+        ("actor_explained_variance", "角色价值解释方差"),
+        ("command_policy_loss", "指令策略损失"),
+        ("command_value_loss", "指令价值损失"),
+        ("command_entropy", "指令熵"),
+        ("command_approx_kl", "指令近似 KL"),
+        ("command_clip_fraction", "指令裁剪比例"),
+        ("command_dual_clip_fraction", "指令 Dual-Clip 触发比例"),
+        ("command_explained_variance", "指令价值解释方差"),
+        ("command_policy_valid_count", "有效指令策略步数"),
+        ("command_unset_rate", "Unset 比例"),
+        ("command_no_command_rate", "无指令比例"),
+        ("command_legalizer_invalid_count", "协作指令非法次数"),
+        ("command_legalizer_valid_rate", "协作指令合法率"),
+        ("actor_policy_lag_updates", "角色策略滞后步数"),
+        ("gradient_norm", "裁剪前梯度范数"),
+        ("reward_hp_rate_sqrt_sqrt", "血量奖励"),
+        ("reward_money", "经济奖励"),
+        ("reward_exp", "经验奖励"),
+        ("reward_total_hurt_to_hero", "英雄伤害奖励"),
+        ("reward_atk_monster_132", "马可野怪奖励"),
+        ("reward_atk_monster_141", "貂蝉野怪奖励"),
+        ("reward_atk_monster_193", "铠野怪奖励"),
+        ("reward_atk_crystal", "攻击水晶奖励"),
+        ("reward_jungle_route_shaping", "打野路线奖励"),
+        ("reward_lane_last_hit", "线上补刀奖励"),
+        ("reward_no_target_penalty", "无目标惩罚"),
+        ("reward_lane_attendance", "回线进度奖励"),
+        ("reward_custom_kda", "自定义 KDA 净奖励"),
+        ("reward_tyrant", "暴君奖励"),
+        ("reward_structure_nonlinear", "自定义非线性防御塔奖励"),
+        ("reward_post_kill_push", "击杀后推进窗口奖励"),
+        ("reward_terminal_crystal_custom", "自定义终局水晶奖励"),
+        ("reward_crystal_danger", "水晶危险奖励"),
+        ("reward_defense_pressure", "防守压力奖励"),
+        ("reward_temporal_focus", "时序集火奖励"),
+        ("reward_teammate_abandonment", "队友未支援惩罚"),
+        ("reward_teammate_support", "队友支援奖励"),
+        ("reward_group_attack", "三人集火奖励"),
+        ("reward_long_inactivity", "长期无贡献惩罚"),
+        ("long_inactivity_penalty_count", "长期无贡献惩罚次数"),
+        ("reward_command_sparse", "指令稀疏回报"),
+        ("reward_command_response", "指令响应回报"),
+        ("reward_command_nonresponse", "指令无响应惩罚"),
+        ("reward_command_idle", "空指令无效惩罚"),
+        ("reward_command_farm_camp", "刷野任务奖励"),
+        ("reward_tower_risk", "越塔风险奖励"),
+        ("reward_defense_wave", "防守兵线奖励"),
+        ("structure_positive_reward", "敌塔推进奖励"),
+        ("structure_negative_reward", "己塔损失奖励"),
+        ("structure_actor_reward_132", "马可推塔归因奖励"),
+        ("structure_actor_reward_141", "貂蝉推塔归因奖励"),
+        ("structure_actor_reward_193", "铠推塔归因奖励"),
+        ("opponent_anchor_episode_ratio", "固定锚点训练局比例"),
+    )
+    core_grouped_panels = (
+        (
+            "资源目标奖励",
+            "resource_objective_rewards",
+            (
+                "reward_kai_wolf",
+                "reward_treasure_thief",
+                "reward_speed_buff",
+            ),
+        ),
+        (
+            "辅助价值损失",
+            "auxiliary_value_losses",
+            (
+                "actor_auxiliary_value_loss",
+                *(
+                    f"actor_aux_{category}_loss"
+                    for category in FrozenV1Config.AUXILIARY_VALUE_CATEGORIES
+                ),
+            ),
+        ),
+        (
+            "辅助价值解释方差",
+            "auxiliary_value_explained_variance",
+            tuple(
+                f"actor_aux_{category}_explained_variance"
+                for category in FrozenV1Config.AUXILIARY_VALUE_CATEGORIES
+            ),
+        ),
+    )
+
+    diagnostic_metrics = (
+        ("no_target_grace_count", "无目标宽限次数"),
+        ("strategic_wait_exemption_count", "战略等待豁免次数"),
+        ("long_inactivity_stationary_count", "长期不动命中次数"),
+        ("long_inactivity_wandering_count", "长期徘徊命中次数"),
+        ("long_inactivity_no_damage_count", "长期无伤害命中次数"),
+        ("long_inactivity_tyrant_exemption_count", "暴君刷新等待豁免次数"),
+        ("command_nonresponse_count", "指令无响应次数"),
+        ("command_idle_penalty_count", "空指令无效次数"),
+        ("teammate_abandonment_count", "队友未支援次数"),
+        ("teammate_support_count", "队友支援次数"),
+        ("temporal_focus_count", "时序集火次数"),
+        ("defense_pressure_count", "防守压力次数"),
+        ("group_attack_count", "三人集火次数"),
+        ("command_teammate_abandonment_count", "指令未支援次数"),
+        ("command_teammate_support_count", "指令支援次数"),
+        ("collision_escape_count", "碰撞脱困次数"),
+        ("collision_blocked_direction_mean", "碰撞阻塞方向"),
+        ("actor_hybrid_cancellation_ratio", "混合价值抵消比"),
+        ("tower_risk_hit_count", "确认塔伤次数"),
+        ("tower_risk_warning_frames", "越塔警告帧"),
+        ("tower_risk_danger_frames", "越塔危险帧"),
+        ("tower_risk_critical_frames", "越塔危急帧"),
+        ("tower_risk_reset_count", "越塔状态重置"),
+        ("defense_wave_completion_count", "防守清线完成"),
+        ("defense_wave_under_count", "塔下威胁窗口"),
+        ("defense_wave_front_count", "塔前威胁窗口"),
+        ("defense_wave_response_count", "清线首次响应"),
+        ("defense_wave_progress_total", "清线归因进度"),
+        ("defense_wave_ignore_candidate_count", "忽视清线候选"),
+        ("defense_wave_ignore_penalty_count", "忽视清线惩罚"),
+        ("defense_wave_ignore_exemption_count", "忽视清线豁免"),
+        ("structure_attribution_coverage", "塔伤归因覆盖率"),
+        ("structure_attribution_fallback_count", "塔伤回退次数"),
+        ("structure_attributed_hit_count", "确认推塔命中"),
+        ("structure_actor_hit_132", "马可推塔命中"),
+        ("structure_actor_hit_141", "貂蝉推塔命中"),
+        ("structure_actor_hit_193", "铠推塔命中"),
+        ("spawn_boundary_move_block_count", "出生区移动拦截"),
+        ("spawn_boundary_target_block_count", "出生区目标拦截"),
+        ("spawn_boundary_displacement_block_count", "出生区位移拦截"),
+        ("spawn_boundary_recovery_count", "出生区恢复次数"),
+        ("tower_critical_move_block_count", "危急越塔拦截"),
+        ("tower_critical_displacement_block_count", "危急位移拦截"),
+        ("safety_all_illegal_recovery_count", "安全动作恢复"),
+        ("official_task_start_count", "官方任务开始"),
+        ("official_task_navigation_count", "官方导航响应"),
+        ("official_task_engagement_count", "官方接战响应"),
+        ("official_task_completion_count", "官方任务完成"),
+        ("official_task_abort_count", "官方任务中止"),
+        ("official_task_recovery_count", "官方任务恢复"),
+        ("official_task_protocol_rejected_count", "官方协议拒绝"),
+        ("official_task_navigation_failure_count", "官方导航失败"),
+        ("official_task_engagement_failure_count", "官方接战失败"),
+        ("official_task_persistence_failure_count", "官方持续失败"),
+        ("official_task_lifecycle_lock_count", "官方生命周期锁"),
+        ("official_deer_command_count", "官方鹿区指令"),
+        ("official_deer_renewal_count", "官方鹿区续发"),
+        ("official_deer_successor_count", "官方回线后继"),
+    )
+    diagnostic_grouped_panels = (
+        (
+            "越塔阶段进入",
+            "tower_risk_phase_entries",
+            (
+                "tower_risk_warning_count",
+                "tower_risk_danger_count",
+                "tower_risk_critical_count",
+            ),
+        ),
+        (
+            "防守结构窗口",
+            "defense_wave_structure_counts",
+            (
+                "defense_wave_outer_count",
+                "defense_wave_high_count",
+                "defense_wave_crystal_count",
+            ),
+        ),
+        (
+            "防守账本状态",
+            "defense_wave_ledger_state",
+            (
+                "defense_wave_missing_count",
+                "defense_wave_missing_peak_frames",
+                "defense_wave_invalidated_count",
+                "defense_wave_runtime_reuse_count",
+                "defense_wave_teammate_progress_count",
+            ),
+        ),
+        (
+            "官方任务阶段",
+            "official_task_phase_timing",
+            (
+                "official_task_arrival_count",
+                "official_task_navigation_latency_frames",
+                "official_task_engagement_latency_frames",
+            ),
+        ),
+        (
+            "资源目标次数",
+            "resource_objective_counts",
+            (
+                "kai_wolf_reward_count",
+                "treasure_thief_reward_count",
+                "speed_buff_reward_count",
+            ),
+        ),
+        (
+            "分英雄策略熵",
+            "hero_policy_entropy",
+            (
+                "hero_132_entropy",
+                "hero_141_entropy",
+                "hero_193_entropy",
+            ),
+        ),
+        (
+            "分英雄价值损失",
+            "hero_value_losses",
+            (
+                "hero_132_value_loss",
+                "hero_141_value_loss",
+                "hero_193_value_loss",
+            ),
+        ),
+        (
+            "闪现门控状态",
+            "flash_gate_state",
+            (
+                "flash_official_legal_count",
+                "flash_gate_open_count",
+                "flash_blocked_count",
+                "flash_no_safe_landing_count",
+            ),
+        ),
+        (
+            "闪现触发原因",
+            "flash_trigger_reasons",
+            (
+                "flash_trigger_low_hp_count",
+                "flash_trigger_tower_count",
+                "flash_trigger_chase_count",
+                "flash_trigger_marco_ultimate_count",
+            ),
+        ),
+        (
+            "兵线开局规则",
+            "lane_opening_rules",
+            (
+                "lane_opening_mask_count",
+                "lane_opening_release_count",
+                "lane_first_wave_attack_mask_count",
+                "lane_first_wave_clear_count",
+                "lane_opening_emergency_release_count",
+            ),
+        ),
+        (
+            "打野开局规则",
+            "jungle_opening_rules",
+            (
+                "jungle_opening_attack_mask_count",
+                "jungle_camp_exit_mask_count",
+            ),
+        ),
+        (
+            "混合价值分量",
+            "hybrid_value_components",
+            (
+                "actor_value_self_mean",
+                "actor_value_team_mean",
+                "actor_value_enemy_mean",
+            ),
+        ),
+    )
+
+    builder = MonitorConfigBuilder().title("3v3 Hybrid Multi-Value PPO")
+    for group_name, group_name_en, metrics, grouped_panels in (
+        ("核心指标", "core", core_metrics, core_grouped_panels),
+        (
+            "诊断指标",
+            "diagnostic",
+            diagnostic_metrics,
+            diagnostic_grouped_panels,
+        ),
+    ):
+        builder = builder.add_group(
+            group_name=group_name,
+            group_name_en=group_name_en,
+        )
+        for metric, title in metrics:
+            builder = (
+                builder.add_panel(name=title, name_en=metric, type="line")
+                .add_metric(metrics_name=metric, expr=f"avg({metric}{{}})")
+                .end_panel()
+            )
+        for panel_name, panel_name_en, panel_metrics in grouped_panels:
+            builder = builder.add_panel(
+                name=panel_name,
+                name_en=panel_name_en,
+                type="line",
+            )
+            for metric in panel_metrics:
+                builder = builder.add_metric(
+                    metrics_name=metric,
+                    expr=f"avg({metric}{{}})",
+                )
+            builder = builder.end_panel()
+        builder = builder.end_group()
+    return builder.build()
+
+
+__all__ = ("build_monitor",)
